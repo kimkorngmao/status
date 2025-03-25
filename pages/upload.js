@@ -72,7 +72,7 @@ export default function Upload() {
     formData.append('image', sticker);
 
     const imgBBUrl = 'https://api.imgbb.com/1/upload';
-    const imgBBApiKey = 'YOUR_IMGBB_API_KEY'; // Replace with your ImgBB API Key
+    const imgBBApiKey = 'ff37a0062ff9e3a09a102b1f66e43eab'; // Replace with your ImgBB API Key
 
     try {
       const response = await fetch(`${imgBBUrl}?key=${imgBBApiKey}`, {
