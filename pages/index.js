@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { db } from '../lib/firebase';
 import { collection, query, orderBy, getDocs, deleteDoc, doc } from 'firebase/firestore';
+import Head from 'next/head';
 
 export default function Home() {
   const [history, setHistory] = useState([]);
@@ -57,6 +58,10 @@ export default function Home() {
 
   return (
     <div className="max-w-md w-full p-6 bg-white dark:bg-gray-800 mx-auto">
+      <Head>
+        <title>Status - Kimkorng Mao</title>
+        
+      </Head>
       <h2 className="mt-6 text-gray-500 dark:text-gray-400 text-sm">Recent Updates</h2>
       
       {/* Show loading spinner if data is being fetched */}
