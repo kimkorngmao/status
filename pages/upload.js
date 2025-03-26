@@ -66,8 +66,6 @@ export default function Upload() {
   };
 
   const handleSubmit = async () => {
-    if (!sticker) return;
-
     const formData = new FormData();
     formData.append('image', sticker);
 
