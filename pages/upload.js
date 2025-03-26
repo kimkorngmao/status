@@ -65,7 +65,15 @@ export default function Upload() {
     setSticker(e.target.files[0]);
   };
 
-  const handleSubmit = async () => {
+const handleSubmit = async () => {
+  if (!emoji || !text) {
+    alert('Please select a mood or write a status.');
+    return;
+  }
+
+  let stickerUrl = null;
+
+  if (sticker) {
     const formData = new FormData();
     formData.append('image', sticker);
 
@@ -79,22 +87,29 @@ export default function Upload() {
       });
 
       const result = await response.json();
-
-      const stickerUrl = result.data.url;
-
-        await addDoc(collection(db, 'statuses'), {
-          emoji,
-          text,
-          stickerUrl,
-          timestamp: serverTimestamp(),
-        });
-
-        router.push('/');
+      stickerUrl = result.data.url;
     } catch (error) {
       console.error('Error uploading image to ImgBB:', error);
       alert('An error occurred while uploading the image.');
+      return;
     }
-  };
+  }
+
+  try {
+    await addDoc(collection(db, 'statuses'), {
+      emoji,
+      text,
+      stickerUrl,
+      timestamp: serverTimestamp(),
+    });
+
+    router.push('/');
+  } catch (error) {
+    console.error('Error adding document to Firestore:', error);
+    alert('An error occurred while saving your status.');
+  }
+};
+
 
   const handleLogout = () => {
     // Clear the key time from localStorage and set isKeyCorrect to false
