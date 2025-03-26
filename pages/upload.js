@@ -80,8 +80,7 @@ export default function Upload() {
 
       const result = await response.json();
 
-      if (result.success) {
-        const stickerUrl = result.data.url;
+      const stickerUrl = result.data.url;
 
         await addDoc(collection(db, 'statuses'), {
           emoji,
@@ -91,9 +90,6 @@ export default function Upload() {
         });
 
         router.push('/');
-      } else {
-        alert('Failed to upload image. Please try again.');
-      }
     } catch (error) {
       console.error('Error uploading image to ImgBB:', error);
       alert('An error occurred while uploading the image.');
