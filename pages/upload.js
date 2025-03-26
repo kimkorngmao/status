@@ -66,13 +66,9 @@ export default function Upload() {
   };
 
 const handleSubmit = async () => {
-  if (!text) {
-    alert('Please select a mood or write a status.');
-    return;
-  }
-
   let stickerUrl = null;
 
+  // If there's an image, upload to ImgBB first
   if (sticker) {
     const formData = new FormData();
     formData.append('image', sticker);
@@ -95,21 +91,26 @@ const handleSubmit = async () => {
     }
   }
 
+  // Prevent submitting if all fields are empty
+  if (!emoji && !text.trim() && !stickerUrl) {
+    alert('Please select a mood, write some text, or upload an image.');
+    return;
+  }
+
   try {
     await addDoc(collection(db, 'statuses'), {
-      emoji,
-      text,
+      emoji: emoji || null,
+      text: text.trim() || null,
       stickerUrl,
       timestamp: serverTimestamp(),
     });
 
     router.push('/');
   } catch (error) {
-    console.error('Error adding document to Firestore:', error);
-    alert('An error occurred while saving your status.');
+    console.error('Error submitting status:', error);
+    alert('Failed to submit status. Please try again.');
   }
 };
-
 
   const handleLogout = () => {
     // Clear the key time from localStorage and set isKeyCorrect to false
