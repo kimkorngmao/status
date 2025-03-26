@@ -66,7 +66,7 @@ export default function Upload() {
   };
 
 const handleSubmit = async () => {
-  if (!emoji || !text) {
+  if (!text) {
     alert('Please select a mood or write a status.');
     return;
   }
