@@ -65,7 +65,11 @@ export default function Upload() {
     setSticker(e.target.files[0]);
   };
 
-  const handleSubmit = async () => {
+const handleSubmit = async () => {
+  let stickerUrl = null;
+
+  // If there's an image, upload to ImgBB first
+  if (sticker) {
     const formData = new FormData();
     formData.append('image', sticker);
 
@@ -79,22 +83,34 @@ export default function Upload() {
       });
 
       const result = await response.json();
-
-      const stickerUrl = result.data.url;
-
-        await addDoc(collection(db, 'statuses'), {
-          emoji,
-          text,
-          stickerUrl,
-          timestamp: serverTimestamp(),
-        });
-
-        router.push('/');
+      stickerUrl = result.data.url;
     } catch (error) {
       console.error('Error uploading image to ImgBB:', error);
       alert('An error occurred while uploading the image.');
+      return;
     }
-  };
+  }
+
+  // Prevent submitting if all fields are empty
+  if (!emoji && !text.trim() && !stickerUrl) {
+    alert('Please select a mood, write some text, or upload an image.');
+    return;
+  }
+
+  try {
+    await addDoc(collection(db, 'statuses'), {
+      emoji: emoji || null,
+      text: text.trim() || null,
+      stickerUrl,
+      timestamp: serverTimestamp(),
+    });
+
+    router.push('/');
+  } catch (error) {
+    console.error('Error submitting status:', error);
+    alert('Failed to submit status. Please try again.');
+  }
+};
 
   const handleLogout = () => {
     // Clear the key time from localStorage and set isKeyCorrect to false
